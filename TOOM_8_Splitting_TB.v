@@ -40,7 +40,7 @@ module TOOM_8_TB();
     //clock generation
     always #5 clk = ~clk;
 
-    // Initialization
+    //initialization
     initial begin
         clk = 0;
         A = 1024'd0;
