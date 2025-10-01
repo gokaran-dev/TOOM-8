@@ -23,7 +23,7 @@ module TOOM_8 (
     reg [1023:0] B;
     wire [2047:0] final_value;
 
-    // Internal chunk wires (128 bits + 1 leading zero)
+    
     wire [128:0] A_chunk0, A_chunk1, A_chunk2, A_chunk3;
     wire [128:0] A_chunk4, A_chunk5, A_chunk6, A_chunk7;
     wire [128:0] B_chunk0, B_chunk1, B_chunk2, B_chunk3;
