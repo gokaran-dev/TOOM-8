@@ -37,7 +37,7 @@ module TOOM_8 (
         product <= final_value;
     end
 
-    // Manually assign chunks (with 1 leading zero to make 129 bits)
+    //Manually assign chunks (with 1 leading zero to make 129 bits, so its compatible with sign operations)
     assign A_chunk0 = {1'b0, A[127:0]};
     assign A_chunk1 = {1'b0, A[255:128]};
     assign A_chunk2 = {1'b0, A[383:256]};
