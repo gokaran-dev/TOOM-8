@@ -6,13 +6,13 @@ module TOOM_8_TB();
     reg [1023:0] A, B;
     wire [2047:0] product;
 
-    // Wires to capture the chunk outputs from the DUT
+    
     wire [128:0] A_chunk0_out, A_chunk1_out, A_chunk2_out, A_chunk3_out,
                  A_chunk4_out, A_chunk5_out, A_chunk6_out, A_chunk7_out;
     wire [128:0] B_chunk0_out, B_chunk1_out, B_chunk2_out, B_chunk3_out,
                  B_chunk4_out, B_chunk5_out, B_chunk6_out, B_chunk7_out;
 
-    // DUT instantiation
+    
     TOOM_8 DUT (
         .clk(clk),
         .X(A),
@@ -37,7 +37,7 @@ module TOOM_8_TB();
         .B_chunk7(B_chunk7_out)
     );
 
-    // Clock generation
+    //clock generation
     always #5 clk = ~clk;
 
     // Initialization
@@ -47,7 +47,7 @@ module TOOM_8_TB();
         B = 1024'd0;
     end
 
-    // Stimulus
+    //stimulus
     initial begin
         #110; 
         
@@ -59,7 +59,7 @@ module TOOM_8_TB();
 
         @(posedge clk);
 
-       #100 $finish;
+       #20 $finish;
     end
 
 endmodule
