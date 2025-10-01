@@ -15,7 +15,7 @@ module TOOM_8_TB();
     wire signed [154:0] a13, b13;
     wire signed [128:0] ainf, binf;
 
-    // DUT instantiation
+    
     TOOM_8 DUT (
         .clk(clk),
         .X(A),
@@ -53,7 +53,7 @@ module TOOM_8_TB();
         .binf(binf)     
     );
 
-    // Clock generation
+    //clock generation
     always #5 clk = ~clk;
     
     // Initialization
@@ -63,7 +63,7 @@ module TOOM_8_TB();
         B = 1024'd0;
     end
         
-    // Stimulus
+    //stimulus
     initial begin
         #110;
         // Set chunks explicitly (low chunk = 1, high chunk = 8)
@@ -72,10 +72,7 @@ module TOOM_8_TB();
         B = {128'd8, 128'd7, 128'd6, 128'd5,
              128'd4, 128'd3, 128'd2, 128'd253};
 
-        #20;
-        $display("a0 = %d (%h)", a0, a0);
-        $display("b0 = %d (%h)", b0, b0);
-        $finish;
+        #20 $finish;
     end
 
 endmodule
