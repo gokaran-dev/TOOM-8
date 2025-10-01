@@ -25,7 +25,7 @@ module TOOM_8 (
     output [128:0] B_chunk7
 );
 
-    // Use wires for registered input
+    
     reg [1023:0] A;
     reg [1023:0] B;
     wire [2047:0] final_value;
