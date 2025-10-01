@@ -6,7 +6,6 @@ module TOOM_8 (
     input  [1023:0] Y,
     output reg [2047:0] product,
 
-    // Expose each chunk separately
     output [128:0] A_chunk0,
     output [128:0] A_chunk1,
     output [128:0] A_chunk2,
