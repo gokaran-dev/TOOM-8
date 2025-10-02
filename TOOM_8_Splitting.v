@@ -6,7 +6,6 @@ module TOOM_8 (
     input  [1023:0] Y,
     output reg [2047:0] product,
 
-    // Expose each chunk separately
     output [128:0] A_chunk0,
     output [128:0] A_chunk1,
     output [128:0] A_chunk2,
@@ -26,7 +25,7 @@ module TOOM_8 (
     output [128:0] B_chunk7
 );
 
-    // Use wires for registered input
+    
     reg [1023:0] A;
     reg [1023:0] B;
     wire [2047:0] final_value;
@@ -37,7 +36,7 @@ module TOOM_8 (
         product <= final_value;
     end
 
-    // Manually assign chunks (with 1 leading zero to make 129 bits)
+    //Manually assign chunks (with 1 leading zero to make 129 bits, so its compatible with sign operations)
     assign A_chunk0 = {1'b0, A[127:0]};
     assign A_chunk1 = {1'b0, A[255:128]};
     assign A_chunk2 = {1'b0, A[383:256]};
