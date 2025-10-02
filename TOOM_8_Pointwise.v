@@ -136,7 +136,7 @@ module TOOM_8 (
     assign p11 = a11 * b11;
     assign p12 = a12 * b12;
     assign p13 = a13 * b13;
-    assign pinf= ainf * binf;
+    assign p14 = ainf * binf;
 
     
 endmodule
