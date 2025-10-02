@@ -14,7 +14,7 @@ module TOOM_8_Pointwise (
     output signed [297:0] p9, p10, 
     output signed [299:0] p11, p12, 
     output signed [309:0] p13,
-    output signed [257:0] pinf 
+    output signed [257:0] p14
 );
 
     reg [1023:0] A;
@@ -136,7 +136,7 @@ module TOOM_8_Pointwise (
     assign p11 = a11 * b11;
     assign p12 = a12 * b12;
     assign p13 = a13 * b13;
-    assign pinf= ainf * binf;
+    assign p14 = ainf * binf;
 
     
 endmodule

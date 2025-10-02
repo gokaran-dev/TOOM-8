@@ -13,7 +13,7 @@ module TOOM_8_Pointwise_TB();
     wire signed [297:0] p9, p10; 
     wire signed [299:0] p11, p12; 
     wire signed [309:0] p13;     
-    wire signed [257:0] pinf;
+    wire signed [257:0] p14;
 
 
     TOOM_8_Pointwise DUT (
@@ -35,7 +35,7 @@ module TOOM_8_Pointwise_TB();
         .p11(p11),
         .p12(p12),
         .p13(p13),
-        .pinf(pinf)
+        .p14(p14)
     );
 
     //clock generation
