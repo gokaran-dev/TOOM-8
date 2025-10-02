@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module TOOM_8_TB();
+module TOOM_8_Pointwise_TB();
 
     reg clk;
     reg [1023:0] A, B;
@@ -16,7 +16,7 @@ module TOOM_8_TB();
     wire signed [257:0] pinf;
 
 
-    TOOM_8 DUT (
+    TOOM_8_Pointwise DUT (
         .clk(clk),
         .X(A),
         .Y(B),

@@ -1,20 +1,27 @@
 
 `timescale 1ns/1ps
 
-module TOOM_8_Pointwise (
+module TOOM_8 (
     input  clk,
     input  [1023:0] X,
     input  [1023:0] Y,
     output reg [2047:0] product,
-    output signed [257:0] p0,   
-    output signed [263:0] p1, p2,  
-    output signed [277:0] p3, p4,  
-    output signed [287:0] p5, p6,  
-    output signed [295:0] p7, p8,  
-    output signed [297:0] p9, p10, 
-    output signed [299:0] p11, p12, 
-    output signed [309:0] p13,
-    output signed [257:0] pinf 
+    
+    output signed [290:0]  c0_scaled,
+    output signed [363:0]  c1_scaled,
+    output signed [359:0]  c2_scaled,
+    output signed [368:0]  c3_scaled,
+    output signed [353:0]  c4_scaled,
+    output signed [364:0]  c5_scaled,
+    output signed [351:0]  c6_scaled,
+    output signed [349:0]  c7_scaled,
+    output signed [338:0]  c8_scaled,
+    output signed [333:0]  c9_scaled,
+    output signed [329:0]  c10_scaled,
+    output signed [319:0]  c11_scaled,
+    output signed [309:0]  c12_scaled,
+    output signed [295:0]  c13_scaled,
+    output signed [291:0]  c14_scaled
 );
 
     reg [1023:0] A;
@@ -111,7 +118,7 @@ module TOOM_8_Pointwise (
 
      
     //pointwise multiplication
-   /*wire signed [257:0] p0;    
+    wire signed [257:0] p0;    
     wire signed [263:0] p1, p2;  
     wire signed [277:0] p3, p4;  
     wire signed [287:0] p5, p6;  
@@ -119,7 +126,7 @@ module TOOM_8_Pointwise (
     wire signed [297:0] p9, p10; 
     wire signed [299:0] p11, p12; 
     wire signed [309:0] p13;     
-    wire signed [257:0] pinf;*/
+    wire signed [257:0] p14;
 
     assign p0 = a0  * b0;
     assign p1 = a1  * b1;
@@ -136,7 +143,95 @@ module TOOM_8_Pointwise (
     assign p11 = a11 * b11;
     assign p12 = a12 * b12;
     assign p13 = a13 * b13;
-    assign pinf= ainf * binf;
+    assign p14 = ainf * binf;
+    
+    //LCM Scaled coefficients
+    /*wire signed [290:0]  c0_scaled;
+    wire signed [363:0]  c1_scaled;
+    wire signed [359:0]  c2_scaled;
+    wire signed [368:0]  c3_scaled;
+    wire signed [353:0]  c4_scaled;
+    wire signed [364:0]  c5_scaled;
+    wire signed [351:0]  c6_scaled;
+    wire signed [349:0]  c7_scaled;
+    wire signed [338:0]  c8_scaled;
+    wire signed [333:0]  c9_scaled;
+    wire signed [329:0]  c10_scaled;
+    wire signed [319:0]  c11_scaled;
+    wire signed [309:0]  c12_scaled;
+    wire signed [295:0]  c13_scaled;
+    wire signed [291:0]  c14_scaled;*/
+
+    //assignments
+    assign c0_scaled  = 34'd6227020800  * p0;
+    
+    assign c1_scaled  = 30'd889574400   * p0 + 33'd4670265600  * p1 - 34'd6227020800  * p2 - 31'd1297296000 * p3
+                      + 32'd2335132800  * p4 + 30'd345945600   * p5 - 31'd864864000   * p6 - 27'd70761600   * p7
+                      + 29'd259459200   * p8 + 24'd9434880     * p9 - 26'd56609280    * p10 - 20'd604800    * p11
+                      + 23'd7862400     * p12 - 19'd518400     * p13 + 55'd22596613079040000 * p14;
+
+    assign c2_scaled  = 33'd5337446400  * p1 - 34'd9286909632  * p0 + 33'd5337446400  * p2 - 30'd833976000 * p3
+                      - 30'd833976000   * p4 + 28'd164736000   * p5 + 28'd164736000   * p6 - 25'd27799200  * p7
+                      - 25'd27799200    * p8 + 23'd3234816     * p9 + 23'd3234816     * p10 - 18'd187200   * p11
+                      - 18'd187200      * p12 + 52'd3228087582720000 * p14;
+
+    assign c3_scaled  = 32'd3949463232  * p2 - 31'd1627735824 * p1 - 31'd1326701376 * p0 + 31'd1517784840 * p3
+                      - 32'd3065603112  * p4 - 30'd461027424  * p5 + 31'd1234936560 * p6 + 27'd98583264   * p7
+                      - 30'd380004768   * p8 - 24'd13424112   * p9 + 27'd83779488   * p10 + 20'd870792    * p11
+                      - 24'd11694696    * p12 + 20'd773136    * p13 - 55'd33700337672601600 * p14;
+
+    assign c4_scaled  = 32'd3559107552  * p0 - 32'd2622761856 * p1 - 32'd2622761856 * p2 + 30'd1035288540 * p3
+                      + 30'd1035288540  * p4 - 28'd227381440  * p5 - 28'd227381440  * p6 + 26'd39721968   * p7
+                      + 26'd39721968    * p8 - 23'd4694976    * p9 - 23'd4694976    * p10 + 19'd273988    * p11
+                      + 19'd273988      * p12 - 53'd4814333953228800 * p14;
+
+    assign c5_scaled  = 29'd508443936   * p0 + 26'd46568808  * p1 - 30'd936345696   * p2 - 28'd223836470 * p3
+                      + 30'd817021062   * p4 + 27'd121934384 * p5 - 29'd418526680   * p6 - 25'd30513912  * p7
+                      + 28'd138365656   * p8 + 23'd4453592   * p9 - 27'd31416528    * p10 - 20'd300014   * p11
+                      + 23'd4448158     * p12 - 19'd296296   * p13 + 54'd12915289484697600 * p14;
+
+    assign c6_scaled  = 29'd427901760   * p1 - 30'd534209676 * p0 + 29'd427901760 * p2 - 28'd217844055 * p3
+                      - 28'd217844055   * p4 + 27'd68891680  * p5 + 27'd68891680  * p6 - 24'd13406250  * p7
+                      - 24'd13406250    * p8 + 21'd1661088   * p9 + 21'd1661088   * p10 - 17'd99385    * p11
+                      - 17'd99385       * p12 + 51'd1845041354956800 * p14;
+
+    assign c7_scaled  = 27'd27244503    * p1 - 27'd76315668  * p0 + 27'd106307916 * p2 + 24'd2371655 * p3
+                      - 27'd91406601    * p4 - 24'd6714422   * p5 + 26'd51231895  * p6 + 24'd2719002 * p7
+                      - 25'd18907174    * p8 - 21'd477191    * p9 + 23'd4524234   * p10 + 17'd35321  * p11
+                      - 20'd657943      * p12 + 16'd44473    * p13 - 51'd1938540072268800 * p14;
+
+    assign c8_scaled  = 26'd36072036    * p0 - 26'd29992248  * p1 - 26'd29992248 * p2 + 25'd17084925 * p3
+                      + 25'd17084925    * p4 - 23'd6477900   * p5 - 23'd6477900  * p6 + 21'd1546974  * p7
+                      + 21'd1546974     * p8 - 18'd211068    * p9 - 18'd211068   * p10 + 14'd13299   * p11
+                      + 14'd13299       * p12 - 48'd276934296038400 * p14;
+
+    assign c9_scaled  = 29'd5153148     * p0 - 23'd2938221  * p1 - 23'd6079788  * p2 + 21'd1027455 * p3
+                      + 23'd4984551     * p4 - 18'd155298   * p5 - 23'd2850705  * p6 - 15'd23166   * p7
+                      + 21'd1116258     * p8 + 14'd12441    * p9 - 19'd285714   * p10 - 12'd1287   * p11
+                      + 16'd43329       * p12 - 12'd3003    * p13 + 47'd130898204236800 * p14;
+
+    assign c10_scaled = 20'd926640     * p1 - 21'd1093092   * p0 + 20'd926640   * p2 - 20'd559845 * p3
+                      - 20'd559845     * p4 + 19'd234520    * p5 + 19'd234520   * p6 - 17'd64350  * p7
+                      - 17'd64350      * p8 + 14'd10296     * p9 + 14'd10296    * p10 - 10'd715   * p11
+                      - 10'd715        * p12 + 45'd18699743462400 * p14;
+
+    assign c11_scaled = 17'd106821     * p1 - 18'd156156   * p0 + 18'd166452   * p2 - 16'd52195 * p3
+                      - 17'd129987     * p4 + 15'd17446    * p5 + 17'd73645    * p6 - 13'd3666  * p7
+                      - 16'd29458      * p8 + 10'd403      * p9 + 14'd7878     * p10 - 5'd13    * p11
+                      - 11'd1261       * p12 + 7'd91       * p13 - 42'd3966612249600 * p14;
+
+    assign c12_scaled = 14'd12012      * p0 - 14'd10296     * p1 - 14'd10296  * p2 + 13'd6435 * p3
+                      + 13'd6435       * p4 - 12'd2860      * p5 - 12'd2860   * p6 + 10'd858  * p7
+                      + 10'd858        * p8 - 8'd156        * p9 - 8'd156     * p10 + 4'd13   * p11
+                      + 4'd13          * p12 - 40'd566658892800 * p14;
+
+    assign c13_scaled = 12'd1716       * p0 - 11'd1287     * p1 - 12'd1716  * p2 + 10'd715 * p3
+                      + 11'd1287       * p4 - 9'd286       * p5 - 10'd715   * p6 + 7'd78   * p7
+                      + 9'd286         * p8 - 4'd13        * p9 - 7'd78     * p10 + 1'd1   * p11
+                      + 4'd13          * p12 - 1'd1        * p13 + 36'd43589145600 * p14;
+
+    assign c14_scaled = 43'd6227020800 * p14;
+
 
     
 endmodule

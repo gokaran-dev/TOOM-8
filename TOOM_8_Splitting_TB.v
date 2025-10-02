@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module TOOM_8_TB();
+module TOOM_8_Splitting_TB();
 
     reg clk;
     reg [1023:0] A, B;
@@ -13,7 +13,7 @@ module TOOM_8_TB();
                  B_chunk4_out, B_chunk5_out, B_chunk6_out, B_chunk7_out;
 
     
-    TOOM_8 DUT (
+    TOOM_8_Splitting DUT (
         .clk(clk),
         .X(A),
         .Y(B),

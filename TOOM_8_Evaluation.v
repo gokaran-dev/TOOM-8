@@ -2,7 +2,7 @@
 
 `timescale 1ns/1ps
 
-module TOOM_8 (
+module TOOM_8_Evaluation (
     input  clk,
     input  [1023:0] X,
     input  [1023:0] Y,
