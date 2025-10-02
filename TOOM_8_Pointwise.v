@@ -14,7 +14,7 @@ module TOOM_8 (
     output signed [297:0] p9, p10, 
     output signed [299:0] p11, p12, 
     output signed [309:0] p13,
-    output signed [257:0] pinf 
+    output signed [257:0] p14
 );
 
     reg [1023:0] A;
