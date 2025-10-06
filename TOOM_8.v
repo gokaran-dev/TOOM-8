@@ -50,9 +50,6 @@ module TOOM_8 (
     wire signed [295:0]  c13_scaled;
     wire signed [291:0]  c14_scaled;
 
-    //----------------------------------------------------------------------
-    // Wire for Stage 5 (Recomposition output)
-    //----------------------------------------------------------------------
     wire [2047:0] final_value_scaled;
 
     //STAGE 1: Splitting
