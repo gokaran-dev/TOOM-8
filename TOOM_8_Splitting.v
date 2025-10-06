@@ -28,12 +28,10 @@ module TOOM_8_Splitting (
     
     reg [1023:0] A;
     reg [1023:0] B;
-    wire [2047:0] final_value;
 
     always @(posedge clk) begin
         A <= X;
         B <= Y;
-        product <= final_value;
     end
 
     //Manually assign chunks (with 1 leading zero to make 129 bits, so its compatible with sign operations)
