@@ -1,5 +1,3 @@
-
-
 `timescale 1ns/1ps
 
 module TOOM_8_Evaluation (
@@ -36,23 +34,23 @@ module TOOM_8_Evaluation (
     end
 
     // Assign chunk internally
-    assign A_chunk0 = {1'b0, A[127:0]};
-    assign A_chunk1 = {1'b0, A[255:128]};
-    assign A_chunk2 = {1'b0, A[383:256]};
-    assign A_chunk3 = {1'b0, A[511:384]};
-    assign A_chunk4 = {1'b0, A[639:512]};
-    assign A_chunk5 = {1'b0, A[767:640]};
-    assign A_chunk6 = {1'b0, A[895:768]};
-    assign A_chunk7 = {1'b0, A[1023:896]};
+    assign A_chunk0 = {A[127], A[127:0]};
+    assign A_chunk1 = {A[255], A[255:128]};
+    assign A_chunk2 = {A[383], A[383:256]};
+    assign A_chunk3 = {A[511], A[511:384]};
+    assign A_chunk4 = {A[639], A[639:512]};
+    assign A_chunk5 = {A[767], A[767:640]};
+    assign A_chunk6 = {A[895], A[895:768]};
+    assign A_chunk7 = {A[1023], A[1023:896]};
 
-    assign B_chunk0 = {1'b0, B[127:0]};
-    assign B_chunk1 = {1'b0, B[255:128]};
-    assign B_chunk2 = {1'b0, B[383:256]};
-    assign B_chunk3 = {1'b0, B[511:384]};
-    assign B_chunk4 = {1'b0, B[639:512]};
-    assign B_chunk5 = {1'b0, B[767:640]};
-    assign B_chunk6 = {1'b0, B[895:768]};
-    assign B_chunk7 = {1'b0, B[1023:896]};
+    assign B_chunk0 = {B[127], B[127:0]};
+    assign B_chunk1 = {B[255], B[255:128]};
+    assign B_chunk2 = {B[383], B[383:256]};
+    assign B_chunk3 = {B[511], B[511:384]};
+    assign B_chunk4 = {B[639], B[639:512]};
+    assign B_chunk5 = {B[767], B[767:640]};
+    assign B_chunk6 = {B[895], B[895:768]};
+    assign B_chunk7 = {B[1023], B[1023:896]};
 
      //for evaluation point 0 
      //wire signed [128:0] a0 = A_chunk0;

@@ -67,10 +67,8 @@ module TOOM_8_Evaluation_TB();
     initial begin
         #110;
         // Set chunks explicitly (low chunk = 1, high chunk = 8)
-        A = {128'd8, 128'd7, 128'd6, 128'd5,
-             128'd4, 128'd3, 128'd2, 128'd253};
-        B = {128'd8, 128'd7, 128'd6, 128'd5,
-             128'd4, 128'd3, 128'd2, 128'd253};
+       A = {128'd1, 128'd0, 128'd0, 128'd0, 128'd0, 128'd0, 128'd0, 128'd0}; 
+       B = {128'd1, 128'd0, 128'd0, 128'd0, 128'd0, 128'd0, 128'd0, 128'd0};
 
         #20 $finish;
     end
