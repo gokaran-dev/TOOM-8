@@ -2,10 +2,17 @@
 `timescale 1ns/1ps
 
 module TOOM_8_Pointwise (
-    input  clk,
-    input  [1023:0] X,
-    input  [1023:0] Y,
-    output reg [2047:0] product,
+    input signed [128:0] a0,
+    input signed [128:0] b0,
+    input signed [131:0] a1, a2, b1, b2,
+    input signed [138:0] a3, a4, b3, b4,
+    input signed [143:0] a5, a6, b5, b6,
+    input signed [147:0] a7, a8, b7, b8,
+    input signed [148:0] a9, a10, b9, b10, 
+    input signed [149:0] a11, a12, b11, b12,
+    input signed [154:0] a13, b13,
+    input signed [128:0] ainf, binf,
+    
     output signed [257:0] p0,   
     output signed [263:0] p1, p2,  
     output signed [277:0] p3, p4,  
@@ -17,110 +24,8 @@ module TOOM_8_Pointwise (
     output signed [257:0] p14
 );
 
-    reg [1023:0] A;
-    reg [1023:0] B;
-    wire [2047:0] final_value;
-
- 
-    wire [128:0] A_chunk0, A_chunk1, A_chunk2, A_chunk3;
-    wire [128:0] A_chunk4, A_chunk5, A_chunk6, A_chunk7;
-    wire [128:0] B_chunk0, B_chunk1, B_chunk2, B_chunk3;
-    wire [128:0] B_chunk4, B_chunk5, B_chunk6, B_chunk7;
-
-    always @(posedge clk) begin
-        A <= X;
-        B <= Y;
-        product <= final_value;
-    end
-
- 
-    assign A_chunk0 = {1'b0, A[127:0]};
-    assign A_chunk1 = {1'b0, A[255:128]};
-    assign A_chunk2 = {1'b0, A[383:256]};
-    assign A_chunk3 = {1'b0, A[511:384]};
-    assign A_chunk4 = {1'b0, A[639:512]};
-    assign A_chunk5 = {1'b0, A[767:640]};
-    assign A_chunk6 = {1'b0, A[895:768]};
-    assign A_chunk7 = {1'b0, A[1023:896]};
-
-    assign B_chunk0 = {1'b0, B[127:0]};
-    assign B_chunk1 = {1'b0, B[255:128]};
-    assign B_chunk2 = {1'b0, B[383:256]};
-    assign B_chunk3 = {1'b0, B[511:384]};
-    assign B_chunk4 = {1'b0, B[639:512]};
-    assign B_chunk5 = {1'b0, B[767:640]};
-    assign B_chunk6 = {1'b0, B[895:768]};
-    assign B_chunk7 = {1'b0, B[1023:896]};
-
-     //for evaluation point 0 
-     wire signed [128:0] a0 = A_chunk0;
-     wire signed [128:0] b0 = B_chunk0;
+  
      
-     //for evaluation point 1 and -1
-     wire signed [131:0] a1 = A_chunk0 + A_chunk1 + A_chunk2 + A_chunk3 + A_chunk4 + A_chunk5 + A_chunk6 + A_chunk7;
-     wire signed [131:0] a2 = A_chunk0 - A_chunk1 + A_chunk2 - A_chunk3 + A_chunk4 - A_chunk5 + A_chunk6 - A_chunk7;
-     
-     wire signed [131:0] b1  = B_chunk0 + B_chunk1 + B_chunk2 + B_chunk3 + B_chunk4 + B_chunk5 + B_chunk6 + B_chunk7;
-     wire signed [131:0] b2  = B_chunk0 - B_chunk1 + B_chunk2 - B_chunk3 + B_chunk4 - B_chunk5 + B_chunk6 - B_chunk7;
-     
-     //for evaluation point 2 and -2
-     wire signed [138:0] a3 = A_chunk0 + (A_chunk1<<<1) + (A_chunk2<<<2) + (A_chunk3<<<3) + (A_chunk4<<<4) + (A_chunk5<<<5) + (A_chunk6<<<6) + (A_chunk7<<<7);
-     wire signed [138:0] a4 = A_chunk0 - (A_chunk1<<<1) + (A_chunk2<<<2) - (A_chunk3<<<3) + (A_chunk4<<<4) - (A_chunk5<<<5) + (A_chunk6<<<6) - (A_chunk7<<<7);
-    
-     wire signed [138:0] b3  = B_chunk0 + (B_chunk1<<<1) + (B_chunk2<<<2) + (B_chunk3<<<3) + (B_chunk4<<<4) + (B_chunk5<<<5) + (B_chunk6<<<6) + (B_chunk7<<<7);
-     wire signed [138:0] b4  = B_chunk0 - (B_chunk1<<<1) + (B_chunk2<<<2) - (B_chunk3<<<3) + (B_chunk4<<<4) - (B_chunk5<<<5) + (B_chunk6<<<6) - (B_chunk7<<<7);
-     
-     //for evaluation point 3 and -3
-     wire signed [143:0] a5 = A_chunk0 + ((A_chunk1 <<< 1) + A_chunk1) + ((A_chunk2 <<< 3) + A_chunk2) + ((A_chunk3 <<< 4) + (A_chunk3 <<< 3) + (A_chunk3 <<< 1) + A_chunk3) + ((A_chunk4 <<< 6) + (A_chunk4 <<< 4) + A_chunk4) + ((A_chunk5 <<< 7) + (A_chunk5 <<< 6) + (A_chunk5 <<< 5) + (A_chunk5 <<< 4) + (A_chunk5 <<< 1) + A_chunk5) + ((A_chunk6 <<< 9) + (A_chunk6 <<< 7) + (A_chunk6 <<< 6) + (A_chunk6 <<< 4) + (A_chunk6 <<< 3) + A_chunk6) + ( (A_chunk7 <<< 11) + (A_chunk7 <<< 7) + (A_chunk7 <<< 3) + (A_chunk7 <<< 1) + A_chunk7);                       
-     wire signed [143:0] a6 = A_chunk0 - ((A_chunk1 <<< 1) + A_chunk1) + ((A_chunk2 <<< 3) + A_chunk2) - ((A_chunk3 <<< 4) + (A_chunk3 <<< 3) + (A_chunk3 <<< 1) + A_chunk3) + ((A_chunk4 <<< 6) + (A_chunk4 <<< 4) + A_chunk4) - ((A_chunk5 <<< 7) + (A_chunk5 <<< 6) + (A_chunk5 <<< 5) + (A_chunk5 <<< 4) + (A_chunk5 <<< 1) + A_chunk5) + ((A_chunk6 <<< 9) + (A_chunk6 <<< 7) + (A_chunk6 <<< 6) + (A_chunk6 <<< 4) + (A_chunk6 <<< 3) + A_chunk6) - ( (A_chunk7 <<< 11) + (A_chunk7 <<< 7) + (A_chunk7 <<< 3) + (A_chunk7 <<< 1) + A_chunk7);
-     
-    
-     wire signed [143:0] b5  = B_chunk0 + ((B_chunk1 <<< 1) + B_chunk1) + ((B_chunk2 <<< 3) + B_chunk2) + ((B_chunk3 <<< 4) + (B_chunk3 <<< 3) + (B_chunk3 <<< 1) + B_chunk3) + ((B_chunk4 <<< 6) + (B_chunk4 <<< 4) + B_chunk4) + ((B_chunk5 <<< 7) + (B_chunk5 <<< 6) + (B_chunk5 <<< 5) + (B_chunk5 <<< 4) + (B_chunk5 <<< 1) + B_chunk5) + ((B_chunk6 <<< 9) + (B_chunk6 <<< 7) + (B_chunk6 <<< 6) + (B_chunk6 <<< 4) + (B_chunk6 <<< 3) + B_chunk6) + ( (B_chunk7 <<< 11) + (B_chunk7 <<< 7) + (B_chunk7 <<< 3) + (B_chunk7 <<< 1) + B_chunk7);                       
-     wire signed [143:0] b6  = B_chunk0 - ((B_chunk1 <<< 1) + B_chunk1) + ((B_chunk2 <<< 3) + B_chunk2) - ((B_chunk3 <<< 4) + (B_chunk3 <<< 3) + (B_chunk3 <<< 1) + B_chunk3) + ((B_chunk4 <<< 6) + (B_chunk4 <<< 4) + B_chunk4) - ((B_chunk5 <<< 7) + (B_chunk5 <<< 6) + (B_chunk5 <<< 5) + (B_chunk5 <<< 4) + (B_chunk5 <<< 1) + B_chunk5) + ((B_chunk6 <<< 9) + (B_chunk6 <<< 7) + (B_chunk6 <<< 6) + (B_chunk6 <<< 4) + (B_chunk6 <<< 3) + B_chunk6) - ( (B_chunk7 <<< 11) + (B_chunk7 <<< 7) + (B_chunk7 <<< 3) + (B_chunk7 <<< 1) + B_chunk7);
-     
-     //for evaluation point 4 and -4
-     wire signed [145:0] a7 = A_chunk0 + (A_chunk1<<<2) + (A_chunk2<<<4) + (A_chunk3<<<6) + (A_chunk4<<<8) + (A_chunk5<<<10) + (A_chunk6<<<12) + (A_chunk7<<<14);
-     wire signed [145:0] a8 = A_chunk0 - (A_chunk1<<<2) + (A_chunk2<<<4) - (A_chunk3<<<6) + (A_chunk4<<<8) - (A_chunk5<<<10) + (A_chunk6<<<12) - (A_chunk7<<<14);
-     
-     wire signed [145:0] b7  = B_chunk0 + (B_chunk1<<<2) + (B_chunk2<<<4) + (B_chunk3<<<6) + (B_chunk4<<<8) + (B_chunk5<<<10) + (B_chunk6<<<12) + (B_chunk7<<<14);
-     wire signed [145:0] b8  = B_chunk0 - (B_chunk1<<<2) + (B_chunk2<<<4) - (B_chunk3<<<6) + (B_chunk4<<<8) - (B_chunk5<<<10) + (B_chunk6<<<12) - (B_chunk7<<<14);
-     
-     //for evaluation point 5 and -5
-     wire signed [148:0] a9 = A_chunk0 + ((A_chunk1 <<< 2) + A_chunk1) + ((A_chunk2 <<< 4) + (A_chunk2 <<< 3) + A_chunk2) + ((A_chunk3 <<< 6) + (A_chunk3 <<< 5) + (A_chunk3 <<< 4) + (A_chunk3 <<< 3) + (A_chunk3 <<< 2) + A_chunk3) + ((A_chunk4 <<< 9) + (A_chunk4 <<< 6) + (A_chunk4 <<< 5) + (A_chunk4 <<< 4) + A_chunk4) + ((A_chunk5 <<< 11) + (A_chunk5 <<< 10) + (A_chunk5 <<< 5) + (A_chunk5 <<< 4) + (A_chunk5 <<< 2) + A_chunk5) + ((A_chunk6 <<< 13) + (A_chunk6 <<< 12) + (A_chunk6 <<< 11) + (A_chunk6 <<< 8) + (A_chunk6 <<< 3) + A_chunk6) + ((A_chunk7 <<< 16) + (A_chunk7 <<< 13) + (A_chunk7 <<< 12) + (A_chunk7 <<< 8) + (A_chunk7 <<< 5) + (A_chunk7 <<< 3) + (A_chunk7 <<< 2) + A_chunk7);  
-     wire signed [148:0] a10 = A_chunk0 - ((A_chunk1 <<< 2) + A_chunk1) + ((A_chunk2 <<< 4) + (A_chunk2 <<< 3) + A_chunk2) - ((A_chunk3 <<< 6) + (A_chunk3 <<< 5) + (A_chunk3 <<< 4) + (A_chunk3 <<< 3) + (A_chunk3 <<< 2) + A_chunk3) + ((A_chunk4 <<< 9) + (A_chunk4 <<< 6) + (A_chunk4 <<< 5) + (A_chunk4 <<< 4) + A_chunk4) - ((A_chunk5 <<< 11) + (A_chunk5 <<< 10) + (A_chunk5 <<< 5) + (A_chunk5 <<< 4) + (A_chunk5 <<< 2) + A_chunk5) + ((A_chunk6 <<< 13) + (A_chunk6 <<< 12) + (A_chunk6 <<< 11) + (A_chunk6 <<< 8) + (A_chunk6 <<< 3) + A_chunk6) + ((A_chunk7 <<< 16) - (A_chunk7 <<< 13) + (A_chunk7 <<< 12) + (A_chunk7 <<< 8) + (A_chunk7 <<< 5) + (A_chunk7 <<< 3) + (A_chunk7 <<< 2) + A_chunk7);  
-    
-     wire signed [148:0] b9 = B_chunk0 + ((B_chunk1 <<< 2) + B_chunk1) + ((B_chunk2 <<< 4) + (B_chunk2 <<< 3) + B_chunk2) + ((B_chunk3 <<< 6) + (B_chunk3 <<< 5) + (B_chunk3 <<< 4) + (B_chunk3 <<< 3) + (B_chunk3 <<< 2) + B_chunk3) + ((B_chunk4 <<< 9) + (B_chunk4 <<< 6) + (B_chunk4 <<< 5) + (B_chunk4 <<< 4) + B_chunk4) + ((B_chunk5 <<< 11) + (B_chunk5 <<< 10) + (B_chunk5 <<< 5) + (B_chunk5 <<< 4) + (B_chunk5 <<< 2) + B_chunk5) + ((B_chunk6 <<< 13) + (B_chunk6 <<< 12) + (B_chunk6 <<< 11) + (B_chunk6 <<< 8) + (B_chunk6 <<< 3) + B_chunk6) + ((B_chunk7 <<< 16) + (B_chunk7 <<< 13) + (B_chunk7 <<< 12) + (B_chunk7 <<< 8) + (B_chunk7 <<< 5) + (B_chunk7 <<< 3) + (B_chunk7 <<< 2) + B_chunk7);  
-     wire signed [148:0] b10 = B_chunk0 - ((B_chunk1 <<< 2) + B_chunk1) + ((B_chunk2 <<< 4) + (B_chunk2 <<< 3) + B_chunk2) - ((B_chunk3 <<< 6) + (B_chunk3 <<< 5) + (B_chunk3 <<< 4) + (B_chunk3 <<< 3) + (B_chunk3 <<< 2) + B_chunk3) + ((B_chunk4 <<< 9) + (B_chunk4 <<< 6) + (B_chunk4 <<< 5) + (B_chunk4 <<< 4) + B_chunk4) - ((B_chunk5 <<< 11) + (B_chunk5 <<< 10) + (B_chunk5 <<< 5) + (B_chunk5 <<< 4) + (B_chunk5 <<< 2) + B_chunk5) + ((B_chunk6 <<< 13) + (B_chunk6 <<< 12) + (B_chunk6 <<< 11) + (B_chunk6 <<< 8) + (B_chunk6 <<< 3) + B_chunk6) + ((B_chunk7 <<< 16) - (B_chunk7 <<< 13) + (B_chunk7 <<< 12) + (B_chunk7 <<< 8) + (B_chunk7 <<< 5) + (B_chunk7 <<< 3) + (B_chunk7 <<< 2) + B_chunk7);  
-     
-     //for evaluation point 6 and -6
-     wire signed [149:0] a11 = A_chunk0 + ((A_chunk1 <<< 2) + (A_chunk1 <<< 1)) + ((A_chunk2 <<< 5) + (A_chunk2 <<< 2)) + ((A_chunk3 <<< 7) + (A_chunk3 <<< 6) + (A_chunk3 <<< 4) + (A_chunk3 <<< 3)) + ((A_chunk4 <<< 10) + (A_chunk4 <<< 8) + (A_chunk4 <<< 4)) + ((A_chunk5 <<< 12) + (A_chunk5 <<< 11) + (A_chunk5 <<< 10) + (A_chunk5 <<< 9) + (A_chunk5 <<< 6) + (A_chunk5 <<< 5)) + ((A_chunk6 <<< 15) + (A_chunk6 <<< 13) + (A_chunk6 <<< 12) + (A_chunk6 <<< 10) + (A_chunk6 <<< 9) + (A_chunk6 <<< 6)) + ((A_chunk7 <<< 18) + (A_chunk7 <<< 14) + (A_chunk7 <<< 10) + (A_chunk7 <<< 8) + (A_chunk7 <<< 7));
-     wire signed [149:0] a12 = A_chunk0 - ((A_chunk1 <<< 2) + (A_chunk1 <<< 1)) + ((A_chunk2 <<< 5) + (A_chunk2 <<< 2)) - ((A_chunk3 <<< 7) + (A_chunk3 <<< 6) + (A_chunk3 <<< 4) + (A_chunk3 <<< 3)) + ((A_chunk4 <<< 10) + (A_chunk4 <<< 8) + (A_chunk4 <<< 4)) - ((A_chunk5 <<< 12) + (A_chunk5 <<< 11) + (A_chunk5 <<< 10) + (A_chunk5 <<< 9) + (A_chunk5 <<< 6) + (A_chunk5 <<< 5)) + ((A_chunk6 <<< 15) + (A_chunk6 <<< 13) + (A_chunk6 <<< 12) + (A_chunk6 <<< 10) + (A_chunk6 <<< 9) + (A_chunk6 <<< 6)) - ((A_chunk7 <<< 18) + (A_chunk7 <<< 14) + (A_chunk7 <<< 10) + (A_chunk7 <<< 8) + (A_chunk7 <<< 7));                                 
-    
-     wire signed [149:0] b11 = B_chunk0 + ((B_chunk1 <<< 2) + (B_chunk1 <<< 1)) + ((B_chunk2 <<< 5) + (B_chunk2 <<< 2)) + ((B_chunk3 <<< 7) + (B_chunk3 <<< 6) + (B_chunk3 <<< 4) + (B_chunk3 <<< 3)) + ((B_chunk4 <<< 10) + (B_chunk4 <<< 8) + (B_chunk4 <<< 4)) + ((B_chunk5 <<< 12) + (B_chunk5 <<< 11) + (B_chunk5 <<< 10) + (B_chunk5 <<< 9) + (B_chunk5 <<< 6) + (B_chunk5 <<< 5)) + ((B_chunk6 <<< 15) + (B_chunk6 <<< 13) + (B_chunk6 <<< 12) + (B_chunk6 <<< 10) + (B_chunk6 <<< 9) + (B_chunk6 <<< 6)) + ((B_chunk7 <<< 18) + (B_chunk7 <<< 14) + (B_chunk7 <<< 10) + (B_chunk7 <<< 8) + (B_chunk7 <<< 7));
-     wire signed [149:0] b12 = B_chunk0 - ((B_chunk1 <<< 2) + (B_chunk1 <<< 1)) + ((B_chunk2 <<< 5) + (B_chunk2 <<< 2)) - ((B_chunk3 <<< 7) + (B_chunk3 <<< 6) + (B_chunk3 <<< 4) + (B_chunk3 <<< 3)) + ((B_chunk4 <<< 10) + (B_chunk4 <<< 8) + (B_chunk4 <<< 4)) - ((B_chunk5 <<< 12) + (B_chunk5 <<< 11) + (B_chunk5 <<< 10) + (B_chunk5 <<< 9) + (B_chunk5 <<< 6) + (B_chunk5 <<< 5)) + ((B_chunk6 <<< 15) + (B_chunk6 <<< 13) + (B_chunk6 <<< 12) + (B_chunk6 <<< 10) + (B_chunk6 <<< 9) + (B_chunk6 <<< 6)) - ((B_chunk7 <<< 18) + (B_chunk7 <<< 14) + (B_chunk7 <<< 10) + (B_chunk7 <<< 8) + (B_chunk7 <<< 7));   
-     
-     //for evaluation poinr -7
-     wire signed [154:0] a13 = A_chunk0 - ((A_chunk1 <<< 2) + (A_chunk1 <<< 1) + A_chunk1) + ((A_chunk2 <<< 5) + (A_chunk2 <<< 4) + A_chunk2) - ((A_chunk3 <<< 8) + (A_chunk3 <<< 6) + (A_chunk3 <<< 4) + (A_chunk3 <<< 2) + (A_chunk3 <<< 1) + A_chunk3) + ((A_chunk4 <<< 11) + (A_chunk4 <<< 8) + (A_chunk4 <<< 6) + (A_chunk4 <<< 5) + A_chunk4) - ((A_chunk5 <<< 14) + (A_chunk5 <<< 8) + (A_chunk5 <<< 7) + (A_chunk5 <<< 5) + (A_chunk5 <<< 2) + (A_chunk5 <<< 1) + A_chunk5) + ((A_chunk6 <<< 16) + (A_chunk6 <<< 15) + (A_chunk6 <<< 14) + (A_chunk6 <<< 11) + (A_chunk6 <<< 9) + (A_chunk6 <<< 8) + (A_chunk6 <<< 7) + (A_chunk6 <<< 4) + A_chunk6) - ((A_chunk7 <<< 19) + (A_chunk7 <<< 18) + (A_chunk7 <<< 15) + (A_chunk7 <<< 12) + (A_chunk7 <<< 7) + (A_chunk7 <<< 6) + (A_chunk7 <<< 5) + (A_chunk7 <<< 4) + (A_chunk7 <<< 2) + (A_chunk7 <<< 1) + A_chunk7);              
-     wire signed [154:0] b13 = B_chunk0 - ((B_chunk1 <<< 2) + (B_chunk1 <<< 1) + B_chunk1) + ((B_chunk2 <<< 5) + (B_chunk2 <<< 4) + B_chunk2) - ((B_chunk3 <<< 8) + (B_chunk3 <<< 6) + (B_chunk3 <<< 4) + (B_chunk3 <<< 2) + (B_chunk3 <<< 1) + B_chunk3) + ((B_chunk4 <<< 11) + (B_chunk4 <<< 8) + (B_chunk4 <<< 6) + (B_chunk4 <<< 5) + B_chunk4) - ((B_chunk5 <<< 14) + (B_chunk5 <<< 8) + (B_chunk5 <<< 7) + (B_chunk5 <<< 5) + (B_chunk5 <<< 2) + (B_chunk5 <<< 1) + B_chunk5) + ((B_chunk6 <<< 16) + (B_chunk6 <<< 15) + (B_chunk6 <<< 14) + (B_chunk6 <<< 11) + (B_chunk6 <<< 9) + (B_chunk6 <<< 8) + (B_chunk6 <<< 7) + (B_chunk6 <<< 4) + B_chunk6) - ((B_chunk7 <<< 19) + (B_chunk7 <<< 18) + (B_chunk7 <<< 15) + (B_chunk7 <<< 12) + (B_chunk7 <<< 7) + (B_chunk7 <<< 6) + (B_chunk7 <<< 5) + (B_chunk7 <<< 4) + (B_chunk7 <<< 2) + (B_chunk7 <<< 1) + B_chunk7);
-     
-
-     //for evaluation point inf
-     wire signed [128:0] ainf = A_chunk7;
-     wire signed [128:0] binf = B_chunk7;
-     
-
-     
-    //pointwise multiplication
-   /*wire signed [257:0] p0;    
-    wire signed [263:0] p1, p2;  
-    wire signed [277:0] p3, p4;  
-    wire signed [287:0] p5, p6;  
-    wire signed [295:0] p7, p8;  
-    wire signed [297:0] p9, p10; 
-    wire signed [299:0] p11, p12; 
-    wire signed [309:0] p13;     
-    wire signed [257:0] pinf;*/
-
     assign p0 = a0  * b0;
     assign p1 = a1  * b1;
     assign p2 = a2  * b2;
@@ -137,6 +42,5 @@ module TOOM_8_Pointwise (
     assign p12 = a12 * b12;
     assign p13 = a13 * b13;
     assign p14 = ainf * binf;
-
-    
+      
 endmodule
